@@ -7,6 +7,7 @@ from scipy.io.wavfile import write
 import tkinter as tk
 from tkinter import *
 
+#Testing for GitHub :)
 #has to be set at the beginning of tkinter program root = Tk() // improt tkinter as tk
 root = tk.Tk()
 
