@@ -3,6 +3,9 @@ import sox
 import sounddevice
 import time
 import random
+#from pygame import mixer
+#import pygame
+import simpleaudio as sa
 from playsound import playsound
 from scipy.io.wavfile import write
 import tkinter as tk
@@ -14,11 +17,16 @@ totalPlayersLoop = 0
 totalPlayersPlayGame = 0
 playerList = []
 playerCountIterator = 0
+firstPick = ""
 #Function to show specified frame
 def showFrame(frame):
     #show passed in frame
     frame.tkraise()
 
+def showFrameAndFunction(frame):
+    #show passed in frame
+    displayPlayerNames()
+    frame.tkraise()
 #--------------------FRAME TWO FUNCTIONS START--------------------#
 
 #Add player function to control the add player menu and max number of players.
@@ -72,33 +80,59 @@ def delete():
 
 def playGame():
     showFrame(frame3)
-    displayPlayerNames()
+    displayRandomUser()
 
 #--------------------FRAME THREE FUNCTIONS START --------------------#
-
-def displayPlayerNames():
-    global playerCountIterator
+def displayRandomUser():
     global playerList
+    global firstPick
     listIndex = (len(playerList))
+    #Get random player
     for x in range(1):
         randomUser = (random.randint(1,listIndex)) - 1
         firstPick = playerList[randomUser]
         firstPickString = firstPick + " records first!"
-    #Check for how many players there are and display them on frame 3 accordingly.
-    for players in playerList:
-        playerCountIterator += 1
-        frame3_title5 = tk.Label(frame3, text = '', bg = '#080808')
-        frame3_title5.pack(fill = 'x')
-        frame3_title6 = tk.Label(frame3, text = playerList[playerCountIterator - 1], bg = '#080808', fg = 'white', font=("Courier", 30))
-        frame3_title6.pack(fill = 'x')
-
     frame3_title5 = tk.Label(frame3, text = '', bg = '#080808')
     frame3_title5.pack(fill = 'x')
     frame3_title5 = tk.Label(frame3, text = firstPickString, bg = '#080808', fg = 'white', font= ("Courier", 30))
     frame3_title5.pack(side = "top")
     frame3_title5 = tk.Label(frame3, text = '', bg = '#080808')
     frame3_title5.pack(fill = 'x')
-    myButton.pack(side = "top")
+    startRecordingButtonF3.pack(side = "top")
+    frame2_btn2 = tk.Button(frame2, text = 'Play Game', font=("Courier", 20), bg = '#0099ff', command=playGame)
+    frame2_btn2.pack(side = "bottom")
+
+
+def displayPlayerNames():
+    #showFrame(frame3)
+    global playerCountIterator
+    #Check for how many players there are and display them on frame 3 accordingly.
+    for players in playerList:
+        playerCountIterator += 1
+        frame3_title5 = tk.Label(frame4, text = '', bg = '#080808')
+        frame3_title5.pack(fill = 'x')
+        frame3_title6 = tk.Label(frame4, text = playerList[playerCountIterator - 1], bg = '#080808', fg = 'white', font=("Courier", 30))
+        frame3_title6.pack(fill = 'x')
+
+def firstRecording():
+    fs = 44100
+    second = 3
+    print("Recording Audio for", second, "seconds")
+    record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
+    sounddevice.wait()
+    write(inputFileName, fs,record_voice)
+    #Set TFM to the sox.transformer()
+    tfm = sox.Transformer()
+
+    #Call the reverse function within Sox.
+    tfm.reverse()
+
+    #Take in input file, export to home directory.
+    tfm.build(inputFileName, outputFileName)
+    frame3_title5 = tk.Label(frame3, text = '', bg = '#080808')
+    frame3_title5.pack(fill = 'x')
+    showFirstRecordingPlayButton()
+    playGameButtonF3.pack(side = "bottom")
 
 def startRecording1():
     fs = 44100
@@ -115,22 +149,30 @@ def startRecording1():
 
     #Take in input file, export to home directory.
     tfm.build(inputFileName, outputFileName)
+    frame3_title5 = tk.Label(frame3, text = '', bg = '#080808')
+    frame3_title5.pack(fill = 'x')
     showPlayButton()
+
+def showFirstRecordingPlayButton():
+    global firstPick
+    frame4_title5 = tk.Label(frame4, text = '', bg = '#080808')
+    frame4_title5.pack(fill = 'x', side = "bottom")
+    playReversedWordText = "Play " + firstPick + "'s Reversed Word"
+    playButtonF3 = Button(frame4, text = playReversedWordText, font=("Courier", 20), command=playRecording1, bg = '#0099ff')
+    playButtonF3.pack(side = "top")
 
 #Show play it backwards button once recording has finished.
 def showPlayButton():
     frame3_title5 = tk.Label(frame3, text = '', bg = '#080808')
     frame3_title5.pack(fill = 'x', side = "bottom")
-    playButton.pack(side = "top")
+    playButtonF3.pack(side = "top")
 
 #Play recording after it has been reversed.
 def playRecording1():
     playsound(outputFileName)
 
 def restart_program():
-    """Restarts the current program.
-    Note: this function does not return. Any cleanup action (like
-    saving data) must be done before calling this function."""
+    """Restarts the current program."""
     python = sys.executable
     os.execl(python, python, * sys.argv)
 
@@ -169,9 +211,10 @@ window.columnconfigure(0, weight = 1)
 frame1 = tk.Frame(window, bg = '#080808')
 frame2 = tk.Frame(window, bg = '#080808')
 frame3 = tk.Frame(window, bg = '#080808')
+frame4 = tk.Frame(window, bg = '#080808')
 
 #loop to loop through frames
-for frame in (frame1, frame2, frame3):
+for frame in (frame1, frame2, frame3, frame4):
     #nsew = north sound east west
     frame.grid(row = 0, column = 0, sticky = 'nsew')
 
@@ -214,19 +257,32 @@ frame3_title3 = tk.Label(frame3, text = '', bg = '#6600cc')
 frame3_title3.pack(fill = 'x')
 frame3_title4 = tk.Label(frame3, text = '', bg = '#080808')
 frame3_title4.pack(fill = 'x')
-frame3_btn = tk.Button(frame3, text = 'Start Over', font=("Courier", 20), bg = '#800000', command=restart_program)
-frame3_btn.pack(side = "bottom")
 
 
 #Creating a text label widget
-myButton = Button(frame, text = "Start Recording", font=("Courier", 20), command=startRecording1, bg = '#0099ff')
-playButton = Button(frame, text = "Play It Backwards", font=("Courier", 20), command=playRecording1, bg = '#0099ff')
-
-#Put label widget onto the screen
-#myButton.pack(side = "top")
+startRecordingButtonF3 = Button(frame3, text = "Start Recording", font=("Courier", 20), command=firstRecording, bg = '#0099ff')
+playButtonF3 = Button(frame3, text = "Play It Backwards", font=("Courier", 20), command=playRecording1, bg = '#0099ff')
+playGameButtonF3 = tk.Button(frame3, text = 'Play Game', font=("Courier", 20), bg = '#0099ff', command = lambda:showFrameAndFunction(frame4))
 
 #-----------frame 3 END code-------------#
-#test
+
+#-----------frame 4 START code-------------#
+frame4_title1 = tk.Label(frame4, text = '', bg = '#6600cc')
+frame4_title1.pack(fill = 'x')
+frame4_title2 = tk.Label(frame4, text = 'Say It Backwards!', bg = '#6600cc', font=("Courier", 20))
+frame4_title2.pack(fill = 'x')
+frame4_title3 = tk.Label(frame4, text = '', bg = '#6600cc')
+frame4_title3.pack(fill = 'x')
+frame4_title4 = tk.Label(frame4, text = '', bg = '#080808')
+frame4_title4.pack(fill = 'x')
+frame4_btn = tk.Button(frame4, text = 'Start Over', font=("Courier", 20), bg = '#800000', command=restart_program)
+frame4_btn.pack(side = "bottom")
+
+#Creating a text label widget
+startRecordingButtonF4 = Button(frame4, text = "Start Recording", font=("Courier", 20), command=startRecording1, bg = '#0099ff')
+playButtonF4 = Button(frame4, text = "Play It Backwards", font=("Courier", 20), command=playRecording1, bg = '#0099ff')
+#-----------frame 4 END code-------------#
+
 showFrame(frame1)
 
 window.mainloop()
