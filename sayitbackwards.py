@@ -19,6 +19,7 @@ totalPlayersPlayGame = 0
 playerList = []
 playerCountIterator = 0
 firstPick = ""
+firstRecordingIterator = 0
 #Function to show specified frame
 def showFrame(frame):
     #show passed in frame
@@ -36,7 +37,9 @@ def addPlayer():
     global playerList
     #Assign PlayerName to the currently entered value.
     playerName = enterPlayerName.get()
-    whoAreYouPlayingWithTitle.config(text="Who are you playing with?")
+
+    if totalPlayers < 5:
+        whoAreYouPlayingWithTitle.config(text="Who are you playing with?")
     #Check the length of the name entered to ensure it is atleast 1.
     if ((len(playerName)) < 1):
         whoAreYouPlayingWithTitle.config(text="Please enter a name with atleast one character.")
@@ -50,12 +53,16 @@ def addPlayer():
         return
 
     for players in playerList:
-        print (players[0])
-        if players == playerName:
+        #print (players[0])
+        if players == playerName and totalPlayers < 4:
             whoAreYouPlayingWithTitle.config(text="Sorry that name is already taken.")
             return
 
+
     totalPlayers += 1
+    if totalPlayers > 0 and totalPlayers < 5:
+        playerCountTitleText = str(totalPlayers) +"/4 players"
+        playerCountTitle.config(text=playerCountTitleText, fg = 'white', font=("Courier", 30))
     #Call this function to make sure there is atleast one player before displaying play button.
     ifEnoughPlayersForGame()
     #If max number of players has been reached.
@@ -66,8 +73,9 @@ def addPlayer():
             totalPlayersLoop += 1
             frame2_title7 = tk.Label(frame2, text = '', bg = '#080808')
             frame2_title7.pack(fill = 'x')
-            frame2_maxPlayers = Label(frame2, text="Sorry, you have exceeded the maximum amount of players", bg = '#080808', fg = 'white', font=("Courier", 17))
-            frame2_maxPlayers.pack()
+            whoAreYouPlayingWithTitle.config(text="Sorry, you have exceeded the maximum amount of players")
+            #frame2_maxPlayers = Label(frame2, text="Sorry, you have exceeded the maximum amount of players", bg = '#080808', fg = 'white', font=("Courier", 17))
+            #frame2_maxPlayers.pack()
     else:
         #global playerList
         frame2_playerLabel = Label(frame2, text=enterPlayerName.get(), bg = '#080808', fg = 'white', font=("Courier", 30))
@@ -137,7 +145,7 @@ def displayPlayerNames():
 
 def firstRecording():
     fs = 44100
-    second = 3
+    second = 2.5
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
     sounddevice.wait()
@@ -151,13 +159,13 @@ def firstRecording():
     #Take in input file, export to home directory.
     tfm.build(inputFileName, outputFileName)
     #Change text of button after it is pressed
-    startRecordingButtonF3.config(text="Click To Retake")
+    startRecordingButtonF3.config(text="Retake", bg = '#800000')
     showFirstRecordingPlayButton()
     playGameButtonF3.pack(side = "bottom")
 
 def startRecording1():
     fs = 44100
-    second = 3
+    second = 2.5
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
     sounddevice.wait()
@@ -176,13 +184,20 @@ def startRecording1():
 
 def showFirstRecordingPlayButton():
     global firstPick
+    global firstRecordingIterator
     frame3BlackFiller = tk.Label(frame4, text = '', bg = '#080808', font=("Courier", 20))
     frame3BlackFiller.pack(fill = 'x', side = "top")
-    playReversedWordText = "Play " + firstPick + "'s word in reverse"
-    frame3BlackFiller = tk.Label(frame3, text = '', bg = '#080808', font=("Courier", 20))
+    playReversedWordText = "Play " + firstPick + "'s word in reverse:"
+    frame3BlackFiller = tk.Label(frame3, text = '', bg = '#080808', font=("Courier", 100))
     frame3BlackFiller.pack(fill = 'x', side = "top")
-    playButtonF3 = Button(frame3, text = playReversedWordText, font=("Courier", 20), command=playRecording1, bg = '#0099ff')
-    playButtonF3.pack(side = "top")
+    frame3_title2 = tk.Label(frame3, text = playReversedWordText, bg = '#080808', fg = 'white', font=("Courier", 30))
+    rame3BlackFiller = tk.Label(frame4, text = '', bg = '#080808', font=("Courier", 20))
+    frame3BlackFiller.pack(fill = 'x', side = "top")
+    playButtonF3 = Button(frame3, text = "Play", font=("Courier", 20), command=playRecording1, bg = '#0099ff')
+    if firstRecordingIterator < 1:
+        firstRecordingIterator+=1
+        frame3_title2.pack()
+        playButtonF3.pack()
 
 #Show play it backwards button once recording has finished.
 def showPlayButton():
@@ -264,6 +279,10 @@ frame2_title5 = tk.Label(frame2, text = '', bg = '#080808', font=("Courier", 20)
 frame2_title5.pack(fill = 'x')
 frame2_btn1 = tk.Button(frame2, text = 'Add Player', font=("Courier", 20), command=addPlayer, bg = '#0099ff')
 frame2_btn1.pack()
+frame2BlackFiller = tk.Label(frame2, text = '', bg = '#080808', font=("Courier", 20))
+frame2BlackFiller.pack(fill = 'x')
+playerCountTitle = tk.Label(frame2, text = '', bg = '#080808', font=("Courier", 23))
+playerCountTitle.pack()
 frame2_title6 = tk.Label(frame2, text = '', bg = '#080808')
 frame2_title6.pack(fill = 'x')
 
@@ -279,7 +298,7 @@ frame3_title4.pack(fill = 'x')
 
 
 #Creating a text label widget
-startRecordingButtonF3 = Button(frame3, text = "Start Recording", font=("Courier", 20), command=firstRecording, bg = '#0099ff')
+startRecordingButtonF3 = Button(frame3, text = "Start Recording", font=("Courier", 20), command=firstRecording, bg = '#800000')
 playButtonF3 = Button(frame3, text = "Play It Backwards", font=("Courier", 20), command=playRecording1, bg = '#0099ff')
 playGameButtonF3 = tk.Button(frame3, text = 'Start Round', font=("Courier", 20), bg = '#0099ff', command = lambda:showFrameAndFunction(frame4))
 
