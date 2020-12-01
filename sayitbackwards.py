@@ -20,6 +20,9 @@ playerList = []
 playerCountIterator = 0
 firstPick = ""
 firstRecordingIterator = 0
+fs = 48000
+second = 2.5
+playReversedWordText = ""
 #Function to show specified frame
 def showFrame(frame):
     #show passed in frame
@@ -145,8 +148,8 @@ def displayRandomUser():
     frame2PlayGameButton.pack(side = "bottom")
 
 def firstRecording():
-    fs = 48000
-    second = 2.5
+    global fs
+    global second
     print("Recording " + firstPick + "'s Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
     sounddevice.wait()
@@ -164,22 +167,38 @@ def firstRecording():
     showFirstRecordingPlayButton()
     playGameButtonF3.pack(side = "bottom")
 
-
 def displayFrameThreeData():
     #showFrame(frame3)
     global playerCountIterator
+    global playReversedWordText
     #Check for how many players there are and display them on frame 3 accordingly.
-    for players in playerList:
-        playerCountIterator += 1
-        frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
-        frame3Title5.pack(fill = 'x')
-        frame3_title6 = tk.Label(frame4, text = playerList[playerCountIterator - 1], bg = '#080808', fg = 'white', font=("Courier", 30))
-        frame3_title6.pack(fill = 'x')
-        print (playerCountIterator)
-        if playerCountIterator == 1:
-            startRecordingButtonF4User1 = Button(frame4, text = "Start Recording", font=("Courier", 20), command=user1Recording, bg = '#800000')
-            startRecordingButtonF4User1.pack()
-            playButtonF4User1 = Button(frame4, text = "Play", font=("Courier", 20), command=playUser1ReversedAudio, bg = '#0099ff')
+    frame4_title2 = tk.Label(frame4, text = "Original Word:", bg = '#080808', fg = 'white', font=("Courier", 30))
+    frame4_title2.pack()
+    playButtonF3.pack()
+    frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+    frame3Title5.pack(fill = 'x')
+    frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+    frame3Title5.pack(fill = 'x')
+    frame3_title6 = tk.Label(frame4, text = playerList[0], bg = '#080808', fg = 'white', font=("Courier", 30))
+    frame3_title6.pack(fill = 'x')
+    startRecordingButtonF4User1 = Button(frame4, text = "Record", font=("Courier", 20), command=user1Recording, bg = '#800000')
+    startRecordingButtonF4User1.pack()
+    frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+    frame3Title5.pack(fill = 'x')
+    playButtonF4User1 = Button(frame4, text = "Play", font=("Courier", 20), command=playUser1ReversedAudio, bg = '#0099ff')
+    playerCountIterator += 1;
+    #    startRecordingButtonF4User1.pack()
+    #for players in playerList:
+    #    playerCountIterator += 1
+    #    frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+    #    frame3Title5.pack(fill = 'x')
+    #    frame3_title6 = tk.Label(frame4, text = playerList[playerCountIterator - 1], bg = '#080808', fg = 'white', font=("Courier", 30))
+    #    frame3_title6.pack(fill = 'x')
+    #    print (playerCountIterator)
+    #    if playerCountIterator == 1:
+    #        startRecordingButtonF4User1 = Button(frame4, text = "Start Recording", font=("Courier", 20), command=user1Recording, bg = '#800000')
+    #        startRecordingButtonF4User1.pack()
+    #        playButtonF4User1 = Button(frame4, text = "Play", font=("Courier", 20), command=playUser1ReversedAudio, bg = '#0099ff')
         #if playerCountIterator == 2:
         #    startRecordingButtonF4User2 = Button(frame4, text = "Start Recording", font=("Courier", 20), command=user2Recording, bg = '#800000')
         #    startRecordingButtonF4User2.pack()
@@ -192,75 +211,112 @@ def displayFrameThreeData():
 
 def user1Recording():
     global playerCountIterator
-    fs = 48000
-    second = 2.5
+    global fs
+    global second
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
     sounddevice.wait()
     write("user1Recording.wav", fs,record_voice)
     #Set TFM to the sox.transformer()
     tfm = sox.Transformer()
-
     #Call the reverse function within Sox.
     tfm.reverse()
 
     #Take in input file, export to home directory.
-    tfm.build(inputFileName, "user1Reverse.wav")
+    tfm.build("user1Recording.wav", "user1Reverse.wav")
     playButtonF4User1.pack()
-    if playerCountIterator == 2:
-        startRecordingButtonF4User2 = Button(frame4, text = "Start Recording", font=("Courier", 20), command=user2Recording, bg = '#800000')
+    frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+    frame3Title5.pack(fill = 'x')
+    if (len(playerList)) > 1 and playerCountIterator == 1:
+        frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+        frame3Title5.pack(fill = 'x')
+        frame3_title6 = tk.Label(frame4, text = playerList[1], bg = '#080808', fg = 'white', font=("Courier", 30))
+        frame3_title6.pack(fill = 'x')
+        startRecordingButtonF4User2 = Button(frame4, text = "Record", font=("Courier", 20), command=user2Recording, bg = '#800000')
         startRecordingButtonF4User2.pack()
+        playButtonF4User2 = Button(frame4, text = "Play", font=("Courier", 20), command=playUser2ReversedAudio, bg = '#0099ff')
+        frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+        frame3Title5.pack(fill = 'x')
+        playerCountIterator += 1;
 
 def user2Recording():
-    fs = 48000
-    second = 2.5
+    global playerCountIterator
+    global fs
+    global second
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
     sounddevice.wait()
     write("user2Recording.wav", fs,record_voice)
     #Set TFM to the sox.transformer()
     tfm = sox.Transformer()
-
     #Call the reverse function within Sox.
     tfm.reverse()
 
     #Take in input file, export to home directory.
-    tfm.build(inputFileName, "user2Reverse.wav")
-    #Change text of button after it is pressed
+    tfm.build("user2Recording.wav", "user2Reverse.wav")
+    playButtonF4User2.pack()
+    frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+    frame3Title5.pack(fill = 'x')
+    if (len(playerList)) > 2 and playerCountIterator == 2:
+        frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+        frame3Title5.pack(fill = 'x')
+        frame3_title6 = tk.Label(frame4, text = playerList[2], bg = '#080808', fg = 'white', font=("Courier", 30))
+        frame3_title6.pack(fill = 'x')
+        startRecordingButtonF4User3 = Button(frame4, text = "Record", font=("Courier", 20), command=user3Recording, bg = '#800000')
+        startRecordingButtonF4User3.pack()
+        playButtonF4User3 = Button(frame4, text = "Play", font=("Courier", 20), command=playUser3ReversedAudio, bg = '#0099ff')
+        frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+        frame3Title5.pack(fill = 'x')
+        playerCountIterator += 1;
 
 def user3Recording():
-    fs = 48000
-    second = 2.5
+    global playerCountIterator
+    global fs
+    global second
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
     sounddevice.wait()
     write("user3Recording.wav", fs,record_voice)
     #Set TFM to the sox.transformer()
     tfm = sox.Transformer()
-
     #Call the reverse function within Sox.
     tfm.reverse()
 
     #Take in input file, export to home directory.
-    tfm.build(inputFileName, "user3Reverse.wav")
-    #Change text of button after it is pressed
+    tfm.build("user3Recording.wav", "user3Reverse.wav")
+    playButtonF4User3.pack()
+    frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+    frame3Title5.pack(fill = 'x')
+    if (len(playerList)) > 3 and playerCountIterator == 3:
+        frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+        frame3Title5.pack(fill = 'x')
+        frame3_title6 = tk.Label(frame4, text = playerList[3], bg = '#080808', fg = 'white', font=("Courier", 30))
+        frame3_title6.pack(fill = 'x')
+        startRecordingButtonF4User4 = Button(frame4, text = "Record", font=("Courier", 20), command=user4Recording, bg = '#800000')
+        startRecordingButtonF4User4.pack()
+        playButtonF4User4 = Button(frame4, text = "Play", font=("Courier", 20), command=playUser4ReversedAudio, bg = '#0099ff')
+        frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+        frame3Title5.pack(fill = 'x')
+        playerCountIterator += 1;
 
 def user4Recording():
-    fs = 48000
-    second = 2.5
+    global playerCountIterator
+    global fs
+    global second
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
     sounddevice.wait()
     write("user4Recording.wav", fs,record_voice)
     #Set TFM to the sox.transformer()
     tfm = sox.Transformer()
-
     #Call the reverse function within Sox.
     tfm.reverse()
 
     #Take in input file, export to home directory.
-    tfm.build(inputFileName, "user4Reverse.wav")
-    #Change text of button after it is pressed
+    tfm.build("user4Recording.wav", "user4Reverse.wav")
+    playButtonF4User4.pack()
+    frame3Title5 = tk.Label(frame4, text = '', bg = '#080808')
+    frame3Title5.pack(fill = 'x')
 
 def startRecording1():
     fs = 44100
@@ -284,6 +340,7 @@ def startRecording1():
 def showFirstRecordingPlayButton():
     global firstPick
     global firstRecordingIterator
+    global playReversedWordText
     frame3BlackFiller = tk.Label(frame4, text = '', bg = '#080808', font=("Courier", 20))
     frame3BlackFiller.pack(fill = 'x', side = "top")
     playReversedWordText = "Play " + firstPick + "'s word in reverse:"
@@ -406,7 +463,7 @@ frame3_title4.pack(fill = 'x')
 
 
 #Creating a text label widget
-startRecordingButtonF3 = Button(frame3, text = "Start Recording", font=("Courier", 20), command=firstRecording, bg = '#800000')
+startRecordingButtonF3 = Button(frame3, text = "Record", font=("Courier", 20), command=firstRecording, bg = '#800000')
 playButtonF3 = Button(frame3, text = "Play It Backwards", font=("Courier", 20), command=playRecording1, bg = '#0099ff')
 playGameButtonF3 = tk.Button(frame3, text = 'Start Round', font=("Courier", 20), bg = '#0099ff', command = lambda:showFrameAndFunction(frame4))
 
@@ -421,7 +478,11 @@ frame4_title3 = tk.Label(frame4, text = '', bg = '#6600cc')
 frame4_title3.pack(fill = 'x')
 frame4_title4 = tk.Label(frame4, text = '', bg = '#080808')
 frame4_title4.pack(fill = 'x')
+playButtonF3 = Button(frame4, text = "Play", font=("Courier", 20), command=playRecording1, bg = '#0099ff')
 playButtonF4User1 = Button(frame4, text = "Play", font=("Courier", 20), command=playUser1ReversedAudio, bg = '#0099ff')
+playButtonF4User2 = Button(frame4, text = "Play", font=("Courier", 20), command=playUser2ReversedAudio, bg = '#0099ff')
+playButtonF4User3 = Button(frame4, text = "Play", font=("Courier", 20), command=playUser3ReversedAudio, bg = '#0099ff')
+playButtonF4User4 = Button(frame4, text = "Play", font=("Courier", 20), command=playUser4ReversedAudio, bg = '#0099ff')
 frame4BlackFiller = tk.Label(frame4, text = '', bg = '#080808', font=("Courier", 20))
 frame4BlackFiller.pack(fill = 'x', side = "bottom")
 frame4_btn = tk.Button(frame4, text = 'Start Over', font=("Courier", 20), bg = '#800000', command=restart_program)
