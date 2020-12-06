@@ -195,9 +195,9 @@ def firstRecording():
     playGameButtonF3.pack(side = "bottom")
 
 def displayFrameThreeData():
-    #showFrame(frame3)
     global playerCountIterator
     global playReversedWordText
+    global startRecordingButtonF4User1
     #Check for how many players there are and display them on frame 3 accordingly.
     frame4_title2 = tk.Label(frame4, text = "Original Word:", bg = background, fg = 'white', font=(font, 30))
     frame4_title2.pack()
@@ -212,13 +212,15 @@ def displayFrameThreeData():
     startRecordingButtonF4User1.pack()
     frame3Title5 = tk.Label(frame4, text = '', bg = background)
     frame3Title5.pack(fill = 'x')
-    playButtonF4User1 = Button(frame4, image = PlayImageButton, text = "Play", font=(font, 20), command=playUser1ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+    #playButtonF4User1 = Button(frame4, image = PlayImageButton, text = "Play", font=(font, 20), command=playUser1ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
     playerCountIterator += 1;
 
 def user1Recording():
     global playerCountIterator
     global fs
     global second
+    global startRecordingButtonF4User1
+    global startRecordingButtonF4User2
     bingSound1.play()
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
@@ -231,7 +233,9 @@ def user1Recording():
     #Take in input file, export to home directory.
     tfm.build("user1Recording.wav", "user1Reverse.wav")
     bingSound2.play()
-    playButtonF4User1.pack()
+    #startRecordingButtonF3.config(image = RetakeButton, text="Retake", bg = background)
+    startRecordingButtonF4User1.config(image = PlayImageButton, text = "Play", command=playUser1ReversedAudio)
+    #playButtonF4User1.pack()
     frame3Title5 = tk.Label(frame4, text = '', bg = background)
     frame3Title5.pack(fill = 'x')
     if (len(playerList)) > 1 and playerCountIterator == 1:
@@ -241,7 +245,7 @@ def user1Recording():
         frame3_title6.pack(fill = 'x')
         startRecordingButtonF4User2 = Button(frame4, image = RecordButton, text = "Record", font=(font, 20), command=user2Recording, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
         startRecordingButtonF4User2.pack()
-        playButtonF4User2 = Button(frame4, image = PlayImageButton, text = "Play", font=(font, 20), command=playUser2ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+        #playButtonF4User2 = Button(frame4, image = PlayImageButton, text = "Play", font=(font, 20), command=playUser2ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
         frame3Title5 = tk.Label(frame4, text = '', bg = background)
         frame3Title5.pack(fill = 'x')
         playerCountIterator += 1;
@@ -250,6 +254,8 @@ def user2Recording():
     global playerCountIterator
     global fs
     global second
+    global startRecordingButtonF4User2
+    global startRecordingButtonF4User3
     bingSound1.play()
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
@@ -262,7 +268,8 @@ def user2Recording():
     #Take in input file, export to home directory.
     tfm.build("user2Recording.wav", "user2Reverse.wav")
     bingSound2.play()
-    playButtonF4User2.pack()
+    startRecordingButtonF4User2.config(image = PlayImageButton, text = "Play", command=playUser2ReversedAudio)
+    #playButtonF4User2.pack()
     frame3Title5 = tk.Label(frame4, text = '', bg = background)
     frame3Title5.pack(fill = 'x')
     if (len(playerList)) > 2 and playerCountIterator == 2:
@@ -272,7 +279,7 @@ def user2Recording():
         frame3_title6.pack(fill = 'x')
         startRecordingButtonF4User3 = Button(frame4, image = RecordButton, text = "Record", font=(font, 20), command=user3Recording, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
         startRecordingButtonF4User3.pack()
-        playButtonF4User3 = Button(frame4, image = playButtonF4User4, text = "Play", font=(font, 20), command=playUser3ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+        #playButtonF4User3 = Button(frame4, image = playButtonF4User4, text = "Play", font=(font, 20), command=playUser3ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
         frame3Title5 = tk.Label(frame4, text = '', bg = background)
         frame3Title5.pack(fill = 'x')
         playerCountIterator += 1;
@@ -281,6 +288,8 @@ def user3Recording():
     global playerCountIterator
     global fs
     global second
+    global startRecordingButtonF4User3
+    global startRecordingButtonF4User4
     bingSound1.play()
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
@@ -293,7 +302,8 @@ def user3Recording():
     #Take in input file, export to home directory.
     tfm.build("user3Recording.wav", "user3Reverse.wav")
     bingSound2.play()
-    playButtonF4User3.pack()
+    #playButtonF4User3.pack()
+    startRecordingButtonF4User3.config(image = PlayImageButton, text = "Play", command=playUser3ReversedAudio)
     frame3Title5 = tk.Label(frame4, text = '', bg = background)
     frame3Title5.pack(fill = 'x')
     if (len(playerList)) > 3 and playerCountIterator == 3:
@@ -303,7 +313,7 @@ def user3Recording():
         frame3_title6.pack(fill = 'x')
         startRecordingButtonF4User4 = Button(frame4, image = RecordButton, text = "Record", font=(font, 20), command=user4Recording, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
         startRecordingButtonF4User4.pack()
-        playButtonF4User4 = Button(frame4, image=PlayImageButton, text = "Play", font=(font, 20), command=playUser4ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+        #playButtonF4User4 = Button(frame4, image=PlayImageButton, text = "Play", font=(font, 20), command=playUser4ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
         frame3Title5 = tk.Label(frame4, text = '', bg = background)
         frame3Title5.pack(fill = 'x')
         playerCountIterator += 1;
@@ -312,6 +322,8 @@ def user4Recording():
     global playerCountIterator
     global fs
     global second
+    global startRecordingButtonF4User4
+    bingSound1.play()
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
     sounddevice.wait()
@@ -323,7 +335,9 @@ def user4Recording():
 
     #Take in input file, export to home directory.
     tfm.build("user4Recording.wav", "user4Reverse.wav")
-    playButtonF4User4.pack()
+    #playButtonF4User4.pack()
+    bingSound2.play()
+    startRecordingButtonF4User4.config(image = PlayImageButton, text = "Play", command=playUser4ReversedAudio)
     frame3Title5 = tk.Label(frame4, text = '', bg = background)
     frame3Title5.pack(fill = 'x')
 
@@ -497,10 +511,10 @@ frame4_title3.pack(fill = 'x')
 frame4_title4 = tk.Label(frame4, text = '', bg = background)
 frame4_title4.pack(fill = 'x')
 playButtonF3 = Button(frame4, image = PlayImageButton, text = "Play", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
-playButtonF4User1 = Button(frame4, image = PlayImageButton, text = "Play", font=(font, 20), command=playUser1ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
-playButtonF4User2 = Button(frame4, image = PlayImageButton,text = "Play", font=(font, 20), command=playUser2ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
-playButtonF4User3 = Button(frame4, image = PlayImageButton,text = "Play", font=(font, 20), command=playUser3ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
-playButtonF4User4 = Button(frame4, image = PlayImageButton,text = "Play", font=(font, 20), command=playUser4ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+#playButtonF4User1 = Button(frame4, image = PlayImageButton, text = "Play", font=(font, 20), command=playUser1ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+#playButtonF4User2 = Button(frame4, image = PlayImageButton,text = "Play", font=(font, 20), command=playUser2ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+#playButtonF4User3 = Button(frame4, image = PlayImageButton,text = "Play", font=(font, 20), command=playUser3ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+#playButtonF4User4 = Button(frame4, image = PlayImageButton,text = "Play", font=(font, 20), command=playUser4ReversedAudio, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
 frame4BlackFiller = tk.Label(frame4, text = '', bg = background, font=(font, 20))
 frame4BlackFiller.pack(fill = 'x', side = "bottom")
 frame4_btn = tk.Button(frame4, image = StartOverButton, text = 'Start Over', font=(font, 20), command=restart_program, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
