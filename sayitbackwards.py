@@ -40,6 +40,7 @@ def showFrame(frame):
 
 def showFrameAndFunction(frame):
     #show passed in frame
+    chimeSound.play()
     displayFrameThreeData()
     frame.tkraise()
 #--------------------FRAME TWO FUNCTIONS START--------------------#
@@ -55,9 +56,11 @@ def addPlayer():
         whoAreYouPlayingWithTitle.config(text="Who are you playing with?")
     #Check the length of the name entered to ensure it is atleast 1.
     if ((len(playerName)) < 1 and totalPlayers < 4):
+        menuClickSound.play()
         whoAreYouPlayingWithTitle.config(text="Please enter a name with at least one character.")
         return
     if ((len(playerName)) > 12):
+        menuClickSound.play()
         frame2_title7 = tk.Label(frame2, text = '', bg = background)
         frame2_title7.pack(fill = 'x')
         frame3BlackFiller = tk.Label(frame2, text = '', bg = background, font=(font, 20))
@@ -67,9 +70,19 @@ def addPlayer():
 
     for players in playerList:
         if players == playerName and totalPlayers < 4:
+            menuClickSound.play()
             whoAreYouPlayingWithTitle.config(text="Sorry that name is already taken.")
             return
 
+    if (totalPlayers < 4):
+        if totalPlayers == 0:
+            dingSound1.play()
+        elif totalPlayers == 1:
+            dingSound2.play()
+        elif totalPlayers == 2:
+            dingSound3.play()
+        else:
+            dingSound4.play()
 
     totalPlayers += 1
     if totalPlayers > 0 and totalPlayers < 5:
@@ -83,6 +96,7 @@ def addPlayer():
         #This code runs one time to inform the user the max number of players has been met.
         if (totalPlayersLoop < 1):
             totalPlayersLoop += 1
+            menuClickSound.play()
             frame2_title7 = tk.Label(frame2, text = '', bg = background)
             frame2_title7.pack(fill = 'x')
             whoAreYouPlayingWithTitle.config(text="Sorry, you have exceeded the maximum amount of players")
@@ -115,8 +129,8 @@ def delete():
     enterPlayerName.delete(0, END)
 
 def playGame():
+    chimeSound.play()
     showFrame(frame3)
-    #pygame.mixer.Sound.play(dingSound)
     pygame.mixer.music.fadeout(2500)
     displayRandomUser()
 
@@ -133,7 +147,7 @@ def displayRandomUser():
         firstPickString = firstPick + " records first!"
 
     #Pick random word from wordlist
-    lines = open('randomwordlist.txt').read().splitlines()
+    lines = open('wordlist/randomwordlist.txt').read().splitlines()
     myline =random.choice(lines)
     randomWordText = "Try: " + myline
     frame3Title5 = tk.Label(frame3, text = '', bg = background)
@@ -161,6 +175,7 @@ def displayRandomUser():
 def firstRecording():
     global fs
     global second
+    bingSound1.play()
     print("Recording " + firstPick + "'s Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
     sounddevice.wait()
@@ -175,6 +190,7 @@ def firstRecording():
     tfm.build(inputFileName, outputFileName)
     #Change text of button after it is pressed
     startRecordingButtonF3.config(image = RetakeButton, text="Retake", bg = background)
+    bingSound2.play()
     showFirstRecordingPlayButton()
     playGameButtonF3.pack(side = "bottom")
 
@@ -203,6 +219,7 @@ def user1Recording():
     global playerCountIterator
     global fs
     global second
+    bingSound1.play()
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
     sounddevice.wait()
@@ -211,9 +228,9 @@ def user1Recording():
     tfm = sox.Transformer()
     #Call the reverse function within Sox.
     tfm.reverse()
-
     #Take in input file, export to home directory.
     tfm.build("user1Recording.wav", "user1Reverse.wav")
+    bingSound2.play()
     playButtonF4User1.pack()
     frame3Title5 = tk.Label(frame4, text = '', bg = background)
     frame3Title5.pack(fill = 'x')
@@ -233,6 +250,7 @@ def user2Recording():
     global playerCountIterator
     global fs
     global second
+    bingSound1.play()
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
     sounddevice.wait()
@@ -241,9 +259,9 @@ def user2Recording():
     tfm = sox.Transformer()
     #Call the reverse function within Sox.
     tfm.reverse()
-
     #Take in input file, export to home directory.
     tfm.build("user2Recording.wav", "user2Reverse.wav")
+    bingSound2.play()
     playButtonF4User2.pack()
     frame3Title5 = tk.Label(frame4, text = '', bg = background)
     frame3Title5.pack(fill = 'x')
@@ -263,6 +281,7 @@ def user3Recording():
     global playerCountIterator
     global fs
     global second
+    bingSound1.play()
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
     sounddevice.wait()
@@ -271,9 +290,9 @@ def user3Recording():
     tfm = sox.Transformer()
     #Call the reverse function within Sox.
     tfm.reverse()
-
     #Take in input file, export to home directory.
     tfm.build("user3Recording.wav", "user3Reverse.wav")
+    bingSound2.play()
     playButtonF4User3.pack()
     frame3Title5 = tk.Label(frame4, text = '', bg = background)
     frame3Title5.pack(fill = 'x')
@@ -403,15 +422,15 @@ frame3 = tk.Frame(window, bg = background)
 frame4 = tk.Frame(window, bg = background)
 
 #rounded button png'
-startGameButton = PhotoImage(file='Start_Game.png')
-startRoundButton = PhotoImage(file='Start_Round.png')
-RecordButton = PhotoImage(file='Record.png')
-PlayGameButton = PhotoImage(file='Play_Game.png')
-AddPlayerButton= PhotoImage(file='Add_Player.png')
-PlayImageButton = PhotoImage(file='Play.png')
-RetakeButton = PhotoImage(file='Retake.png')
-StartOverButton = PhotoImage(file='Start_Over.png')
-gameLogo = PhotoImage(file='logo.png')
+startGameButton = PhotoImage(file='photos/Start_Game.png')
+startRoundButton = PhotoImage(file='photos/Start_Round.png')
+RecordButton = PhotoImage(file='photos/Record.png')
+PlayGameButton = PhotoImage(file='photos/Play_Game.png')
+AddPlayerButton= PhotoImage(file='photos/Add_Player.png')
+PlayImageButton = PhotoImage(file='photos/Play.png')
+RetakeButton = PhotoImage(file='photos/Retake.png')
+StartOverButton = PhotoImage(file='photos/Start_Over.png')
+gameLogo = PhotoImage(file='photos/logo.png')
 
 #loop to loop through frames
 for frame in (frame1, frame2, frame3, frame4):
@@ -492,12 +511,20 @@ startRecordingButtonF4 = Button(frame4, image=RecordButton, text = "Start Record
 playButtonF4 = Button(frame4, text = "Play It Backwards", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
 #-----------frame 4 END code-------------#
 
+#pygame.mixer.pre_init(48000, 16, 2, 4096)
+pygame.init()
 showFrame(frame1)
 
-#pygame.mixer.pre_init(48000, 16, 1, 4096)
-pygame.init()
-#dingSound = pygame.mixer.Sound("ding.wav")
-mixer.music.load('background.wav')
+dingSound1 = pygame.mixer.Sound('sounds/ding1.wav')
+dingSound2 = pygame.mixer.Sound('sounds/ding2.wav')
+dingSound3 = pygame.mixer.Sound('sounds/ding3.wav')
+dingSound4 = pygame.mixer.Sound('sounds/ding4.wav')
+menuClickSound = pygame.mixer.Sound('sounds/menuclick.wav')
+chimeSound = pygame.mixer.Sound('sounds/chime.wav')
+bingSound1 = pygame.mixer.Sound('sounds/bing.wav')
+bingSound2 = pygame.mixer.Sound('sounds/bing2.wav')
+mixer.music.load('sounds/background.wav')
+mixer.music.set_volume(.5)
 mixer.music.play()
 
 
