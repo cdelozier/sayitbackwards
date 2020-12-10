@@ -26,6 +26,8 @@ fs = 48000
 second = 2.5
 playReversedWordText = ""
 fontColor = 'white'
+frameNumber = 'frame'
+frameIterator = 3
 
 #html colors:
 background = '#0c2c3b'
@@ -85,9 +87,11 @@ def addPlayer():
         elif totalPlayers == 2:
             dingSound3.play()
             fontColor = "orange"
-        else:
+        elif totalPlayers == 3:
             dingSound4.play()
             fontColor = "red"
+    else:
+        menuClickSound.play()
 
     totalPlayers += 1
     if totalPlayers > 0 and totalPlayers < 5:
@@ -208,6 +212,8 @@ def displayFrameThreeData():
     #Check for how many players there are and display them on frame 3 accordingly.
     frame4_title2 = tk.Label(frame4, text = "Original Word:", bg = background, fg = 'white', font=(font, 30, 'italic'))
     frame4_title2.pack()
+    #playButtonF3.config(frame4)
+    playButtonF3 = Button(frame4, image = PlayImageButton, text = "Play", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
     playButtonF3.pack()
     frame3Title5 = tk.Label(frame4, text = '', bg = background)
     frame3Title5.pack(fill = 'x')
@@ -228,6 +234,11 @@ def user1Recording():
     global second
     global startRecordingButtonF4User1
     global startRecordingButtonF4User2
+    global frameNumber
+    global frameIterator
+    frameIterator += 1;
+    frameNumber = frameNumber + str(frameIterator)
+    print (frameNumber)
     bingSound1.play()
     print("Recording Audio for", second, "seconds")
     record_voice = sounddevice.rec(int(second * fs),samplerate = fs,channels = 2)
@@ -251,6 +262,9 @@ def user1Recording():
         frame3Title5 = tk.Label(frame4, text = '', bg = background)
         frame3Title5.pack(fill = 'x')
         playerCountIterator += 1;
+    else:
+        frame4_btn = tk.Button(frame4, image = NextRoundButton, text = 'Start Over', font=(font, 20), command=lambda:showFrame(frame5), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+        frame4_btn.pack(side = "bottom")
 
 def user2Recording():
     global playerCountIterator
@@ -283,6 +297,9 @@ def user2Recording():
         frame3Title5 = tk.Label(frame4, text = '', bg = background)
         frame3Title5.pack(fill = 'x')
         playerCountIterator += 1;
+    else:
+        frame4_btn = tk.Button(frame4, image = NextRoundButton, text = 'Start Over', font=(font, 20), command=lambda:showFrame(frame5), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+        frame4_btn.pack(side = "bottom")
 
 def user3Recording():
     global playerCountIterator
@@ -315,6 +332,9 @@ def user3Recording():
         frame3Title5 = tk.Label(frame4, text = '', bg = background)
         frame3Title5.pack(fill = 'x')
         playerCountIterator += 1;
+    else:
+        frame4_btn = tk.Button(frame4, image = NextRoundButton, text = 'Start Over', font=(font, 20), command=lambda:showFrame(frame5), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+        frame4_btn.pack(side = "bottom")
 
 def user4Recording():
     global playerCountIterator
@@ -337,6 +357,8 @@ def user4Recording():
     startRecordingButtonF4User4.config(image = PlayImageButton, text = "Play", command=playUser4ReversedAudio)
     frame3Title5 = tk.Label(frame4, text = '', bg = background)
     frame3Title5.pack(fill = 'x')
+    frame4_btn = tk.Button(frame4, image = NextRoundButton, text = 'Start Over', font=(font, 20), command=lambda:showFrame(frame5), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+    frame4_btn.pack(side = "bottom")
 
 def startRecording1():
     fs = 44100
@@ -436,8 +458,10 @@ frame1 = tk.Frame(window, bg = background)
 frame2 = tk.Frame(window, bg = background)
 frame3 = tk.Frame(window, bg = background)
 frame4 = tk.Frame(window, bg = background)
+frame5 = tk.Frame(window, bg = background)
+frame6 = tk.Frame(window, bg = background)
 
-#rounded button png'
+#rounded button png's
 startGameButton = PhotoImage(file='photos/Start_Game.png')
 startRoundButton = PhotoImage(file='photos/Start_Round.png')
 RecordButton = PhotoImage(file='photos/Record.png')
@@ -446,10 +470,11 @@ AddPlayerButton= PhotoImage(file='photos/Add_Player.png')
 PlayImageButton = PhotoImage(file='photos/Play.png')
 RetakeButton = PhotoImage(file='photos/Retake.png')
 StartOverButton = PhotoImage(file='photos/Start_Over.png')
+NextRoundButton = PhotoImage(file='photos/Next_Round.png')
 gameLogo = PhotoImage(file='photos/logo.png')
 
 #loop to loop through frames
-for frame in (frame1, frame2, frame3, frame4):
+for frame in (frame1, frame2, frame3, frame4, frame5, frame6):
     #nsew = north sound east west
     frame.grid(row = 0, column = 0, sticky = 'nsew')
 
@@ -511,12 +536,46 @@ frame4_title3.pack(fill = 'x')
 playButtonF3 = Button(frame4, image = PlayImageButton, text = "Play", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
 frame4BlackFiller = tk.Label(frame4, text = '', bg = background, font=(font, 20))
 frame4BlackFiller.pack(fill = 'x', side = "bottom")
-frame4_btn = tk.Button(frame4, image = StartOverButton, text = 'Start Over', font=(font, 20), command=restart_program, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
-frame4_btn.pack(side = "bottom")
+frame4_btn = tk.Button(frame4, image = NextRoundButton, text = 'Start Over', font=(font, 20), command=lambda:showFrame(frame5), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+#frame4_btn.pack(side = "bottom")
 #Creating a text label widget
 startRecordingButtonF4 = Button(frame4, image=RecordButton, text = "Start Recording", font=(font, 20), command=startRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
 playButtonF4 = Button(frame4, text = "Play It Backwards", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
 #-----------frame 4 END code-------------#
+
+#-----------frame 5 START code-------------#
+frame4_title1 = tk.Label(frame5, text = '', bg = background2)
+frame4_title1.pack(fill = 'x')
+frame4_title2 = tk.Label(frame5, text = 'Round 2', bg = background2, fg = white, font=(font, 40, 'italic'))
+frame4_title2.pack(fill = 'x')
+frame4_title3 = tk.Label(frame5, text = '', bg = background2)
+frame4_title3.pack(fill = 'x')
+playButtonF3 = Button(frame5, image = PlayImageButton, text = "Play", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+frame4BlackFiller = tk.Label(frame5, text = '', bg = background, font=(font, 20))
+frame4BlackFiller.pack(fill = 'x', side = "bottom")
+frame4_btn = tk.Button(frame5, image = NextRoundButton, text = 'Start Over', font=(font, 20), command=lambda:showFrame(frame5), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+frame4_btn.pack(side = "bottom")
+#Creating a text label widget
+startRecordingButtonF4 = Button(frame5, image=RecordButton, text = "Start Recording", font=(font, 20), command=startRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+playButtonF4 = Button(frame5, text = "Play It Backwards", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+#-----------frame 5 END code-------------#
+
+#-----------frame 6 START code-------------#
+frame4_title1 = tk.Label(frame6, text = '', bg = background2)
+frame4_title1.pack(fill = 'x')
+frame4_title2 = tk.Label(frame6, text = 'Round 3', bg = background2, fg = white, font=(font, 40, 'italic'))
+frame4_title2.pack(fill = 'x')
+frame4_title3 = tk.Label(frame6, text = '', bg = background2)
+frame4_title3.pack(fill = 'x')
+playButtonF3 = Button(frame6, image = PlayImageButton, text = "Play", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+frame4BlackFiller = tk.Label(frame6, text = '', bg = background, font=(font, 20))
+frame4BlackFiller.pack(fill = 'x', side = "bottom")
+frame4_btn = tk.Button(frame6, image = StartOverButton, text = 'Start Over', font=(font, 20), command=restart_program, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+frame4_btn.pack(side = "bottom")
+#Creating a text label widget
+startRecordingButtonF4 = Button(frame6, image=RecordButton, text = "Start Recording", font=(font, 20), command=startRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+playButtonF4 = Button(frame6, text = "Play It Backwards", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+#-----------frame 6 END code-------------#
 
 #pygame.mixer.pre_init(48000, 16, 2, 4096)
 pygame.init()
@@ -533,6 +592,5 @@ bingSound2 = pygame.mixer.Sound('sounds/bing2.wav')
 mixer.music.load('sounds/background.wav')
 mixer.music.set_volume(.5)
 mixer.music.play()
-
 
 window.mainloop()
