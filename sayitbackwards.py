@@ -30,6 +30,16 @@ playReversedWordText = ""
 fontColor = 'white'
 frameNumber = 'frame'
 frameIterator = 3
+startingScore = ""
+player1Points = 0
+player2Points = 0
+player3Points = 0
+player4Points = 0
+player1Name = ""
+player2Name = ""
+player3Name = ""
+player4Name = ""
+totalPoints = 0
 
 #html colors:
 background = '#0c2c3b'
@@ -366,7 +376,6 @@ def user4Recording():
     startRecordingButtonF4User4.config(image = PlayImageButton, text = "Play", command=playUser4ReversedAudio)
     frame3Title5 = tk.Label(frame4, text = '', bg = background)
     frame3Title5.pack(fill = 'x')
-    print(roundNumber)
     if roundNumber < 3:
         frame4_btn = tk.Button(frame4, image = VoteButton, text = 'Start Over', font=(font, 20), command=lambda:votes(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
     else:
@@ -405,8 +414,6 @@ def showFirstRecordingPlayButton():
     frame3_title2 = tk.Label(frame3, text = playReversedWordText, bg = background, fg = 'white', font=(font, 30))
     playButtonF3 = Button(frame3, image = PlayImageButton, text = "Play", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
     if secondRecordingIterator == 1:
-        #frame3BlackFiller = tk.Label(frame3, text = '', bg = background, font=(font, 20))
-        #frame3BlackFiller.pack(fill = 'x', side = "top")
         secondRecordingIterator+=1
         frame3_title2.pack()
         playButtonF3.pack()
@@ -447,8 +454,8 @@ def all_children():
         widget.pack_forget()
     for widget in frame4.winfo_children():
         widget.pack_forget()
-    for widget in frame5.winfo_children():
-        widget.pack_forget()
+    #for widget in frame5.winfo_children():
+    #    widget.pack_forget()
     #Frame 3 code repack
     frame3_title1 = tk.Label(frame3, text = '', bg = background2)
     frame3_title1.pack(fill = 'x')
@@ -480,27 +487,144 @@ def votes():
     global secondRecordingIterator
     global roundNumber
     global playerCountIterator
+    global startingScore
+    global player1Points
+    global player2Points
+    global player3Points
+    global player4Points
+    global playerNumber
+    global player1Name
+    global player2Name
+    global player3Name
+    global player4Name
     playerCountIterator = 0;
     roundNumber += 1
     secondRecordingIterator = 1
-    showFrame(frame5)
-    frame5_title1 = tk.Label(frame5, text = '', bg = background2)
-    frame5_title1.pack(fill = 'x')
-    frame5_title2 = tk.Label(frame5, text = 'Who said it best?', bg = background2, fg = white, font=(font, 40, 'italic'))
-    frame5_title2.pack(fill = 'x')
-    frame5_title3 = tk.Label(frame5, text = '', bg = background2)
-    frame5_title3.pack(fill = 'x')
-    frame5_title4 = tk.Label(frame5, text = '', bg = background)
-    frame5_title4.pack(fill = 'x')
-    for players in playerList:
-        frame5_playerLabel = Label(frame5, text=players, bg = background, fg = 'white', font=(font, 40))
-        frame5_playerLabel.pack()
+    playerNumber = 1
+    if roundNumber == 2:
+        frame5_title1 = tk.Label(frame5, text = '', bg = background2)
+        frame5_title1.pack(fill = 'x')
+        frame5_title2 = tk.Label(frame5, text = 'Who said it best?', bg = background2, fg = white, font=(font, 40, 'italic'))
+        frame5_title2.pack(fill = 'x')
+        frame5_title3 = tk.Label(frame5, text = '', bg = background2)
+        frame5_title3.pack(fill = 'x')
         frame5_title4 = tk.Label(frame5, text = '', bg = background)
         frame5_title4.pack(fill = 'x')
-    frame3Title5 = tk.Label(frame5, text = '', bg = background, font=(font, 20))
-    frame3Title5.pack(side = "bottom", fill = 'x')
-    frame5_btn = tk.Button(frame5, image = NextRoundButton, text = 'Start Over', font=(font, 20), command=lambda:all_children(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
-    frame5_btn.pack(side = "bottom")
+        for players in playerList:
+            startingScore  = players + " = " + str(player1Points)
+            if playerNumber == 1:
+                player1Name = players
+                player1ScoreTitle.config(text=startingScore)
+                player1ScoreTitle.pack()
+                addPointButton1 = Button(frame5, image = AddPointButton, text = "Play", font=(font, 20), command=lambda:addPoints1(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+                addPointButton1.pack()
+                subtractPointButton = Button(frame5, image = SubtractPointButton, text = "Play", font=(font, 20), command=lambda:subtractPoints1(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+                subtractPointButton.pack()
+            if playerNumber == 2:
+                player2Name = players
+                player2ScoreTitle.config(text=startingScore)
+                player2ScoreTitle.pack()
+                addPointButton2 = Button(frame5, image = AddPointButton, text = "Play", font=(font, 20), command=lambda:addPoints2(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+                addPointButton2.pack()
+                subtractPointButton = Button(frame5, image = SubtractPointButton, text = "Play", font=(font, 20), command=lambda:subtractPoints2(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+                subtractPointButton.pack()
+            if playerNumber == 3:
+                player3Name = players
+                player3ScoreTitle.config(text=startingScore)
+                player3ScoreTitle.pack()
+                addPointButton3 = Button(frame5, image = AddPointButton, text = "Play", font=(font, 20), command=lambda:addPoints3(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+                addPointButton3.pack()
+                subtractPointButton = Button(frame5, image = SubtractPointButton, text = "Play", font=(font, 20), command=lambda:subtractPoints3(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+                subtractPointButton.pack()
+            if playerNumber == 4:
+                player4Name = players
+                player4ScoreTitle.config(text=startingScore)
+                player4ScoreTitle.pack()
+                addPointButton3 = Button(frame5, image = AddPointButton, text = "Play", font=(font, 20), command=lambda:addPoints4(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+                addPointButton3.pack()
+                subtractPointButton = Button(frame5, image = SubtractPointButton, text = "Play", font=(font, 20), command=lambda:subtractPoints4(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+                subtractPointButton.pack()
+            frame5_title4 = tk.Label(frame5, text = '', bg = background)
+            frame5_title4.pack(fill = 'x')
+            playerNumber += 1
+        frame3Title5 = tk.Label(frame5, text = '', bg = background, font=(font, 20))
+        frame3Title5.pack(side = "bottom", fill = 'x')
+        frame5_btn = tk.Button(frame5, image = NextRoundButton, text = 'Start Over', font=(font, 20), command=lambda:all_children(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+        frame5_btn.pack(side = "bottom")
+    showFrame(frame5)
+
+def addPoints1():
+    global player1Points
+    global player1Name
+    global roundNumber
+    totalPoints = player1Points + player2Points + player3Points + player4Points
+    if totalPoints >= 0:
+        player1Points += 1
+        fullScore = player1Name + " = " + str(player1Points)
+        player1ScoreTitle.config(text=fullScore)
+
+def subtractPoints1():
+    global player1Points
+    global player1Name
+    totalPoints = player1Points + player2Points + player3Points + player4Points
+    if totalPoints > 0:
+        player1Points -= 1
+        fullScore = player1Name + " = " + str(player1Points)
+        player1ScoreTitle.config(text=fullScore)
+
+def addPoints2():
+    global player2Points
+    global player2Name
+    totalPoints = player1Points + player2Points + player3Points + player4Points
+    if totalPoints >= 0:
+        player2Points += 1
+        fullScore = player2Name + " = " + str(player2Points)
+        player2ScoreTitle.config(text=fullScore)
+
+def subtractPoints2():
+    global player2Points
+    global player2Name
+    totalPoints = player1Points + player2Points + player3Points + player4Points
+    if totalPoints > 0:
+        player2Points -= 1
+        fullScore = player2Name + " = " + str(player2Points)
+        player2ScoreTitle.config(text=fullScore)
+
+def addPoints3():
+    global player3Points
+    global player3Name
+    totalPoints = player1Points + player2Points + player3Points + player4Points
+    if totalPoints >= 0:
+        player3Points += 1
+        fullScore = player3Name + " = " + str(player3Points)
+        player3ScoreTitle.config(text=fullScore)
+
+def subtractPoints3():
+    global player3Points
+    global player3Name
+    totalPoints = player1Points + player2Points + player3Points + player4Points
+    if totalPoints > 0:
+        player3Points -= 1
+        fullScore = player3Name + " = " + str(player3Points)
+        player3ScoreTitle.config(text=fullScore)
+
+def addPoints4():
+    global player4Points
+    global player4Name
+    totalPoints = player1Points + player2Points + player3Points + player4Points
+    if totalPoints >= 0:
+        player4Points += 1
+        fullScore = player4Name + " = " + str(player4Points)
+        player4ScoreTitle.config(text=fullScore)
+
+def subtractPoints4():
+    global player4Points
+    global player4Name
+    totalPoints = player1Points + player2Points + player3Points + player4Points
+    if totalPoints > 0:
+        player4Points -= 1
+        fullScore = player4Name + " = " + str(player4Points)
+        player4ScoreTitle.config(text=fullScore)
 
 #Navigate to the home user directory for cody.
 os.chdir('/home/cody/playitbackwards')
@@ -550,6 +674,8 @@ RetakeButton = PhotoImage(file='photos/Retake.png')
 StartOverButton = PhotoImage(file='photos/Start_Over.png')
 NextRoundButton = PhotoImage(file='photos/Next_Round.png')
 VoteButton = PhotoImage(file='photos/Vote.png')
+AddPointButton = PhotoImage(file='photos/add.png')
+SubtractPointButton = PhotoImage(file='photos/subtract.png')
 gameLogo = PhotoImage(file='photos/logo.png')
 
 #loop to loop through frames
@@ -612,6 +738,10 @@ frame4_title2 = tk.Label(frame4, text = 'Round 1', bg = background2, fg = white,
 frame4_title2.pack(fill = 'x')
 frame4_title3 = tk.Label(frame4, text = '', bg = background2)
 frame4_title3.pack(fill = 'x')
+player1ScoreTitle = Label(frame5, text = startingScore, bg = background, fg = 'white', font=(font, 40))
+player2ScoreTitle = Label(frame5, text = startingScore, bg = background, fg = 'white', font=(font, 40))
+player3ScoreTitle = Label(frame5, text = startingScore, bg = background, fg = 'white', font=(font, 40))
+player4ScoreTitle = Label(frame5, text = startingScore, bg = background, fg = 'white', font=(font, 40))
 playButtonF3 = Button(frame4, image = PlayImageButton, text = "Play", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
 frame4BlackFiller = tk.Label(frame4, text = '', bg = background, font=(font, 20))
 frame4BlackFiller.pack(fill = 'x', side = "bottom")
