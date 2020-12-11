@@ -274,10 +274,8 @@ def user1Recording():
         frame3Title5.pack(fill = 'x')
         playerCountIterator += 1;
     else:
-        if roundNumber < 3:
+        if roundNumber < 4:
             frame4_btn = tk.Button(frame4, image = VoteButton, text = 'Start Over', font=(font, 20), command=lambda:votes(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
-        else:
-            frame4_btn = tk.Button(frame4, image = StartOverButton, text = 'Start Over', font=(font, 20), command=lambda:restart_program(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
         frame4_btn.pack(side = "bottom")
 
 def user2Recording():
@@ -312,10 +310,8 @@ def user2Recording():
         frame3Title5.pack(fill = 'x')
         playerCountIterator += 1;
     else:
-        if roundNumber < 3:
+        if roundNumber < 4:
             frame4_btn = tk.Button(frame4, image = VoteButton, text = 'Start Over', font=(font, 20), command=lambda:votes(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
-        else:
-            frame4_btn = tk.Button(frame4, image = StartOverButton, text = 'Start Over', font=(font, 20), command=lambda:restart_program(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
         frame4_btn.pack(side = "bottom")
 
 def user3Recording():
@@ -350,10 +346,8 @@ def user3Recording():
         frame3Title5.pack(fill = 'x')
         playerCountIterator += 1;
     else:
-        if roundNumber < 3:
+        if roundNumber < 4:
             frame4_btn = tk.Button(frame4, image = VoteButton, text = 'Start Over', font=(font, 20), command=lambda:votes(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
-        else:
-            frame4_btn = tk.Button(frame4, image = StartOverButton, text = 'Start Over', font=(font, 20), command=lambda:restart_program(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
         frame4_btn.pack(side = "bottom")
 
 def user4Recording():
@@ -376,10 +370,8 @@ def user4Recording():
     startRecordingButtonF4User4.config(image = PlayImageButton, text = "Play", command=playUser4ReversedAudio)
     frame3Title5 = tk.Label(frame4, text = '', bg = background)
     frame3Title5.pack(fill = 'x')
-    if roundNumber < 3:
+    if roundNumber < 4:
         frame4_btn = tk.Button(frame4, image = VoteButton, text = 'Start Over', font=(font, 20), command=lambda:votes(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
-    else:
-        frame4_btn = tk.Button(frame4, image = StartOverButton, text = 'Start Over', font=(font, 20), command=lambda:restart_program(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
     frame4_btn.pack(side = "bottom")
 
 def startRecording1():
@@ -549,8 +541,9 @@ def votes():
             playerNumber += 1
         frame3Title5 = tk.Label(frame5, text = '', bg = background, font=(font, 20))
         frame3Title5.pack(side = "bottom", fill = 'x')
-        frame5_btn = tk.Button(frame5, image = NextRoundButton, text = 'Start Over', font=(font, 20), command=lambda:all_children(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
         frame5_btn.pack(side = "bottom")
+    if roundNumber == 4:
+        frame5_btn.config(image=StartOverButton, command=restart_program)
     showFrame(frame5)
 
 def addPoints1():
@@ -755,6 +748,8 @@ playButtonF4 = Button(frame4, text = "Play It Backwards", font=(font, 20), comma
 frame5_title1 = tk.Label(frame5, text = '', bg = background2)
 frame5_title2 = tk.Label(frame5, text = 'Who said it best?', bg = background2, fg = white, font=(font, 40, 'italic'))
 frame5_title3 = tk.Label(frame5, text = '', bg = background2)
+frame5_btn = tk.Button(frame5, image = NextRoundButton, text = 'Start Over', font=(font, 20), command=lambda:all_children(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+
 #-----------frame 5 END code-------------#
 
 #pygame.mixer.pre_init(48000, 16, 2, 4096)
