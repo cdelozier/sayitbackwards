@@ -25,7 +25,7 @@ firstRecordingIterator = 0
 secondRecordingIterator = 1
 roundNumber = 1
 fs = 48000
-second = 0
+second = 2.5
 playReversedWordText = ""
 fontColor = 'white'
 frameNumber = 'frame'
@@ -425,20 +425,15 @@ def showPlayButton():
 
 #Play recording after it has been reversed.
 def playRecording1():
-    bingSound2.play()
     playsound(outputFileName)
 
 def playUser1ReversedAudio():
-    bingSound2.play()
     playsound("user1Reverse.wav")
 def playUser2ReversedAudio():
-    bingSound2.play()
     playsound("user2Reverse.wav")
 def playUser3ReversedAudio():
-    bingSound2.play()
     playsound("user3Reverse.wav")
 def playUser4ReversedAudio():
-    bingSound2.play()
     playsound("user4Reverse.wav")
 
 def restart_program():
@@ -452,6 +447,7 @@ def close_window():
 #Remove all widgets from page
 def all_children():
     global roundNumber
+    pygame.mixer.music.fadeout(2500)
     for widget in frame3.winfo_children():
         widget.pack_forget()
     for widget in frame4.winfo_children():
@@ -497,6 +493,10 @@ def votes():
     global player2Name
     global player3Name
     global player4Name
+    menuClickSound.play()
+    mixer.music.load('sounds/intensemusic.wav')
+    mixer.music.set_volume(.5)
+    mixer.music.play()
     playerCountIterator = 0;
     roundNumber += 1
     secondRecordingIterator = 1
@@ -622,7 +622,11 @@ def subtractPoints4():
 def endGame():
     global winner
     global winnerScore
-    print (len(playerList))
+    pygame.mixer.music.fadeout(0)
+    mixer.music.load('sounds/winningmusic.wav')
+    mixer.music.set_volume(.5)
+    mixer.music.play()
+    menuClickSound.play()
     if (len(playerList)) > 1:
         whoWon()
         winnerScoreString = str(winnerScore) + " points!"
