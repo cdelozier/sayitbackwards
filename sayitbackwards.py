@@ -40,6 +40,8 @@ player2Name = ""
 player3Name = ""
 player4Name = ""
 totalPoints = 0
+winner = ""
+winnerScore = 0
 
 #html colors:
 background = '#0c2c3b'
@@ -173,7 +175,7 @@ def displayRandomUser():
     lines = open('wordlist/randomwordlist.txt').read().splitlines()
     myline =random.choice(lines)
     randomWordText = "Try: " + myline
-    frame3Title5 = tk.Label(frame3, text = '', bg = background)
+    frame3Title5 = tk.Label(frame3, text = '', bg = background, font=(font, 10))
     frame3Title5.pack(fill = 'x')
     frame3Title5 = tk.Label(frame3, text = firstPickString, bg = background, fg = 'white', font= (font, 30))
     frame3Title5.pack(side = "top")
@@ -192,8 +194,6 @@ def displayRandomUser():
     startRecordingButtonF3.pack(side = "top")
     frame3BlackFiller = tk.Label(frame3, text = '', bg = background, font=(font, 20))
     frame3BlackFiller.pack(fill = 'x', side = "bottom")
-    frame2PlayGameButton = tk.Button(frame2, image = PlayGameButton, text = 'Play Game', font=(font, 20), bg = yellow, command=playGame)
-    frame2PlayGameButton.pack(side = "bottom")
 
 def firstRecording():
     global fs
@@ -222,7 +222,9 @@ def displayFrameThreeData():
     global playReversedWordText
     global startRecordingButtonF4User1
     #Check for how many players there are and display them on frame 3 accordingly.
-    frame4_title2 = tk.Label(frame4, text = "Original Word:", bg = background, fg = 'white', font=(font, 30, 'italic'))
+    frame3Title5 = tk.Label(frame4, text = '', bg = background, font=(font, 27))
+    frame3Title5.pack(fill = 'x')
+    frame4_title2 = tk.Label(frame4, text = "Reversed Word:", bg = background, fg = 'white', font=(font, 30, 'italic'))
     frame4_title2.pack()
     playButtonF3 = Button(frame4, image = PlayImageButton, text = "Play", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
     playButtonF3.pack()
@@ -274,8 +276,13 @@ def user1Recording():
         frame3Title5.pack(fill = 'x')
         playerCountIterator += 1;
     else:
-        if roundNumber < 4:
+        if roundNumber < 4 and (len(playerList)) < 1:
             frame4_btn = tk.Button(frame4, image = VoteButton, text = 'Start Over', font=(font, 20), command=lambda:votes(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+        elif roundNumber < 3 and (len(playerList)) == 1:
+            roundNumber += 1
+            frame4_btn = tk.Button(frame4, image = NextRoundButton, text = 'Start Over', font=(font, 20), command=lambda:all_children(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+        elif roundNumber == 3 and (len(playerList)) == 1:
+            frame4_btn = tk.Button(frame4, image = EndGameButton, text = 'Start Over', font=(font, 20), command=lambda:endGame(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
         frame4_btn.pack(side = "bottom")
 
 def user2Recording():
@@ -398,8 +405,8 @@ def showFirstRecordingPlayButton():
     global firstRecordingIterator
     global secondRecordingIterator
     global playReversedWordText
-    frame3BlackFiller = tk.Label(frame3, text = '', bg = background, font=(font, 20))
-    frame3BlackFiller.pack(fill = 'x', side = "top")
+    #frame3BlackFiller = tk.Label(frame3, text = '', bg = background, font=(font, 20))
+    #frame3BlackFiller.pack(fill = 'x', side = "top")
     playReversedWordText = "Play " + firstPick + "'s word in reverse:"
     frame3BlackFiller = tk.Label(frame3, text = '', bg = background, font=(font, 50))
     frame3BlackFiller.pack(fill = 'x', side = "top")
@@ -439,6 +446,9 @@ def restart_program():
     python = sys.executable
     os.execl(python, python, * sys.argv)
 
+def close_window():
+    window.destroy()
+
 #Remove all widgets from page
 def all_children():
     global roundNumber
@@ -446,8 +456,6 @@ def all_children():
         widget.pack_forget()
     for widget in frame4.winfo_children():
         widget.pack_forget()
-    #for widget in frame5.winfo_children():
-    #    widget.pack_forget()
     #Frame 3 code repack
     frame3_title1 = tk.Label(frame3, text = '', bg = background2)
     frame3_title1.pack(fill = 'x')
@@ -463,10 +471,10 @@ def all_children():
     frame4_title1 = tk.Label(frame4, text = '', bg = background2)
     frame4_title1.pack(fill = 'x')
     if roundNumber == 2:
-        frame4_title2 = tk.Label(frame4, text = 'Round 2', bg = background2, fg = white, font=(font, 40, 'italic'))
+        frame4_title2 = tk.Label(frame4, text = 'Round 2', bg = background2, fg = white, font=(font, 30, 'italic'))
         frame4_title2.pack(fill = 'x')
-    else:
-        frame4_title2 = tk.Label(frame4, text = 'Round 3', bg = background2, fg = white, font=(font, 40, 'italic'))
+    elif roundNumber == 3:
+        frame4_title2 = tk.Label(frame4, text = 'Round 3', bg = background2, fg = white, font=(font, 30, 'italic'))
         frame4_title2.pack(fill = 'x')
     frame4_title3 = tk.Label(frame4, text = '', bg = background2)
     frame4_title3.pack(fill = 'x')
@@ -503,7 +511,7 @@ def votes():
         frame5_title4 = tk.Label(frame5, text = '', bg = background)
         frame5_title4.pack(fill = 'x')
         for players in playerList:
-            startingScore  = players + " = " + str(player1Points)
+            startingScore  = players + ": " + str(player1Points)
             if playerNumber == 1:
                 player1Name = players
                 player1ScoreTitle.config(text=startingScore)
@@ -543,81 +551,134 @@ def votes():
         frame3Title5.pack(side = "bottom", fill = 'x')
         frame5_btn.pack(side = "bottom")
     if roundNumber == 4:
-        frame5_btn.config(image=StartOverButton, command=restart_program)
+        frame5_btn.config(image=EndGameButton, command=lambda:endGame())
     showFrame(frame5)
 
 def addPoints1():
     global player1Points
     global player1Name
     global roundNumber
-    totalPoints = player1Points + player2Points + player3Points + player4Points
-    if totalPoints >= 0:
+    if player1Points >= 0:
         player1Points += 1
-        fullScore = player1Name + " = " + str(player1Points)
+        fullScore = player1Name + ": " + str(player1Points)
         player1ScoreTitle.config(text=fullScore)
 
 def subtractPoints1():
     global player1Points
     global player1Name
-    totalPoints = player1Points + player2Points + player3Points + player4Points
-    if totalPoints > 0:
+    if player1Points > 0:
         player1Points -= 1
-        fullScore = player1Name + " = " + str(player1Points)
+        fullScore = player1Name + ": " + str(player1Points)
         player1ScoreTitle.config(text=fullScore)
 
 def addPoints2():
     global player2Points
     global player2Name
-    totalPoints = player1Points + player2Points + player3Points + player4Points
-    if totalPoints >= 0:
+    if player2Points >= 0:
         player2Points += 1
-        fullScore = player2Name + " = " + str(player2Points)
+        fullScore = player2Name + ": " + str(player2Points)
         player2ScoreTitle.config(text=fullScore)
 
 def subtractPoints2():
     global player2Points
     global player2Name
-    totalPoints = player1Points + player2Points + player3Points + player4Points
-    if totalPoints > 0:
+    if player2Points > 0:
         player2Points -= 1
-        fullScore = player2Name + " = " + str(player2Points)
+        fullScore = player2Name + ": " + str(player2Points)
         player2ScoreTitle.config(text=fullScore)
 
 def addPoints3():
     global player3Points
     global player3Name
-    totalPoints = player1Points + player2Points + player3Points + player4Points
-    if totalPoints >= 0:
+    if player3Points >= 0:
         player3Points += 1
-        fullScore = player3Name + " = " + str(player3Points)
+        fullScore = player3Name + ": " + str(player3Points)
         player3ScoreTitle.config(text=fullScore)
 
 def subtractPoints3():
     global player3Points
     global player3Name
-    totalPoints = player1Points + player2Points + player3Points + player4Points
-    if totalPoints > 0:
+    if player3Points > 0:
         player3Points -= 1
-        fullScore = player3Name + " = " + str(player3Points)
+        fullScore = player3Name + ": " + str(player3Points)
         player3ScoreTitle.config(text=fullScore)
 
 def addPoints4():
     global player4Points
     global player4Name
-    totalPoints = player1Points + player2Points + player3Points + player4Points
-    if totalPoints >= 0:
+    if player4Points >= 0:
         player4Points += 1
-        fullScore = player4Name + " = " + str(player4Points)
+        fullScore = player4Name + ": " + str(player4Points)
         player4ScoreTitle.config(text=fullScore)
 
 def subtractPoints4():
     global player4Points
     global player4Name
-    totalPoints = player1Points + player2Points + player3Points + player4Points
-    if totalPoints > 0:
+    if player4Points > 0:
         player4Points -= 1
-        fullScore = player4Name + " = " + str(player4Points)
+        fullScore = player4Name + ": " + str(player4Points)
         player4ScoreTitle.config(text=fullScore)
+
+def endGame():
+    global winner
+    global winnerScore
+    print (len(playerList))
+    if (len(playerList)) > 1:
+        whoWon()
+        winnerScoreString = str(winnerScore) + " points!"
+        WhoWonLogo.pack(fill = 'x')
+        frame6_title4.pack(fill = 'x')
+        frame3_title4 = tk.Label(frame6, text = '', bg = background)
+        frame3_title4.pack(fill = 'x')
+        frame6_title5.config(text=winner, fg = 'white', font=(font, 45))
+        frame6_title5.pack()
+        frame3_title4 = tk.Label(frame6, text = '', bg = background)
+        frame3_title4.pack(fill = 'x')
+        frame6_title6.config(fg = 'white', font=(font, 45))
+        frame6_title6.pack()
+        frame3_title4 = tk.Label(frame6, text = '', bg = background)
+        frame3_title4.pack(fill = 'x')
+        frame6_title7.config(text=winnerScoreString, fg = 'white', font=(font, 45))
+        frame6_title7.pack()
+        frame3_title4 = tk.Label(frame6, text = '', bg = background, font=(font, 20))
+        frame3_title4.pack(side = "top", fill = 'x')
+        frame6_title8.config(font=(font, 28, "italic"))
+        frame6_title8.pack()
+        frame3_title4 = tk.Label(frame6, text = '', bg = background, font=(font, 20))
+        frame3_title4.pack(side = "top", fill = 'x')
+        frame6_btn.pack(side="top")
+        frame3_title4 = tk.Label(frame6, text = '', bg = background, font=(font, 20))
+        frame3_title4.pack(side = "bottom", fill = 'x')
+        frame6_btn2.pack(side="bottom")
+
+    else:
+        frame6_title1.pack(fill = 'x')
+        frame6_title2.config(text = "Thanks for playing!")
+        frame6_title2.pack(fill = 'x')
+        frame6_title3.pack(fill = 'x')
+        frame3_title4 = tk.Label(frame6, text = '', bg = background, font=(font, 20))
+        frame3_title4.pack(side = "top", fill = 'x')
+        frame6_title5.config(text="Would you like to play again?", fg = 'white', font=(font, 32))
+        frame6_title5.pack()
+        frame3_title4 = tk.Label(frame6, text = '', bg = background, font=(font, 20))
+        frame3_title4.pack(side = "top", fill = 'x')
+        frame6_btn.pack(side="top")
+        frame3_title4 = tk.Label(frame6, text = '', bg = background, font=(font, 20))
+        frame3_title4.pack(side = "bottom", fill = 'x')
+        frame6_btn2.pack(side="bottom")
+    showFrame(frame6)
+
+def whoWon():
+    global winner
+    global winnerScore
+    if len(playerList) == 2:
+        players = {playerList[0]: player1Points, playerList[1]: player2Points}
+    elif len(playerList) == 3:
+        players = {playerList[0]: player1Points, playerList[1]: player2Points, playerList[2]: player3Points}
+    elif len(playerList) == 4:
+        players = {playerList[0]: player1Points, playerList[1]: player2Points, playerList[2]: player3Points, playerList[3]: player4Points}
+    winner = max(players, key=players.get)
+    winnerScore = players[winner]
 
 #Navigate to the home user directory for cody.
 os.chdir('/home/cody/playitbackwards')
@@ -669,7 +730,9 @@ NextRoundButton = PhotoImage(file='photos/Next_Round.png')
 VoteButton = PhotoImage(file='photos/Vote.png')
 AddPointButton = PhotoImage(file='photos/add.png')
 SubtractPointButton = PhotoImage(file='photos/subtract.png')
+EndGameButton = PhotoImage(file='photos/End_Game.png')
 gameLogo = PhotoImage(file='photos/logo.png')
+endGameLogo = PhotoImage(file='photos/End_Game_Logo.png')
 
 #loop to loop through frames
 for frame in (frame1, frame2, frame3, frame4, frame5, frame6):
@@ -727,7 +790,7 @@ playGameButtonF3 = tk.Button(frame3, image = startRoundButton, text = 'Start Rou
 #-----------frame 4 START code-------------#
 frame4_title1 = tk.Label(frame4, text = '', bg = background2)
 frame4_title1.pack(fill = 'x')
-frame4_title2 = tk.Label(frame4, text = 'Round 1', bg = background2, fg = white, font=(font, 40, 'italic'))
+frame4_title2 = tk.Label(frame4, text = 'Round 1', bg = background2, fg = white, font=(font, 30, 'italic'))
 frame4_title2.pack(fill = 'x')
 frame4_title3 = tk.Label(frame4, text = '', bg = background2)
 frame4_title3.pack(fill = 'x')
@@ -744,15 +807,27 @@ startRecordingButtonF4 = Button(frame4, image=RecordButton, text = "Start Record
 playButtonF4 = Button(frame4, text = "Play It Backwards", font=(font, 20), command=playRecording1, bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
 #-----------frame 4 END code-------------#
 
-#-----------frame 5 END code-------------#
+#-----------frame 5 START code-------------#
 frame5_title1 = tk.Label(frame5, text = '', bg = background2)
 frame5_title2 = tk.Label(frame5, text = 'Who said it best?', bg = background2, fg = white, font=(font, 40, 'italic'))
 frame5_title3 = tk.Label(frame5, text = '', bg = background2)
 frame5_btn = tk.Button(frame5, image = NextRoundButton, text = 'Start Over', font=(font, 20), command=lambda:all_children(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
-
 #-----------frame 5 END code-------------#
 
-#pygame.mixer.pre_init(48000, 16, 2, 4096)
+#-----------frame 6 START code-------------#
+frame6_title1 = tk.Label(frame6, text = '', bg = background2)
+frame6_title2 = tk.Label(frame6, text = 'Who won?', bg = background2, fg = white, font=(font, 40, 'italic'))
+frame6_title3 = tk.Label(frame6, text = '', bg = background2)
+WhoWonLogo = tk.Label(frame6, image=endGameLogo, text = '', bg = background2)
+frame6_title4 = tk.Label(frame6, text = '', bg = background)
+frame6_title5 = tk.Label(frame6, text = '', bg = background)
+frame6_title6 = tk.Label(frame6, text = 'with', bg = background)
+frame6_title7 = tk.Label(frame6, text = '', bg = background)
+frame6_title8= tk.Label(frame6, text="Would you like to play again?", fg = 'white', font=(font, 32), bg = background)
+frame6_btn = tk.Button(frame6, image = StartOverButton, text = 'Start Over', font=(font, 20), command=lambda:restart_program(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+frame6_btn2 = tk.Button(frame6, image = EndGameButton, text = 'End Game', font=(font, 20), command=lambda:close_window(), bg = background, activebackground=background, borderwidth=0, highlightthickness=0)
+#-----------frame 6 END code-------------#
+
 pygame.init()
 showFrame(frame1)
 
