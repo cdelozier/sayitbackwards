@@ -5,14 +5,12 @@ import time
 import random
 import pygame
 from pygame import mixer
-import simpleaudio as sa
 from playsound import playsound
 from scipy.io.wavfile import write
 import tkinter as tk
 from tkinter import *
 from tkinter import font
 from tkinter import Tk, font
-from PIL import Image, ImageTk
 
 #define global variables
 totalPlayers = 0
@@ -25,7 +23,7 @@ firstRecordingIterator = 0
 secondRecordingIterator = 1
 roundNumber = 1
 fs = 48000
-second = 2.5
+second = 0
 playReversedWordText = ""
 fontColor = 'white'
 frameNumber = 'frame'
@@ -43,7 +41,7 @@ totalPoints = 0
 winner = ""
 winnerScore = 0
 
-#html colors:
+#html site colors:
 background = '#0c2c3b'
 background2 = '#00131c'
 yellow = '#dbbd35'
@@ -55,13 +53,13 @@ def showFrame(frame):
     #show passed in frame
     frame.tkraise()
 
+#Function to show frame 3 data
 def showFrameAndFunction(frame):
     #show passed in frame
     chimeSound.play()
     displayFrameThreeData()
     frame.tkraise()
 #--------------------FRAME TWO FUNCTIONS START--------------------#
-
 #Add player function to control the add player menu and max number of players.
 def addPlayer():
     global totalPlayers
@@ -69,7 +67,6 @@ def addPlayer():
     global fontColor
     #Assign PlayerName to the currently entered value.
     playerName = enterPlayerName.get()
-
     if totalPlayers < 5:
         whoAreYouPlayingWithTitle.config(text="Who are you playing with?")
     #Check the length of the name entered to ensure it is atleast 1.
@@ -85,13 +82,11 @@ def addPlayer():
         frame3BlackFiller.pack(fill = 'x', side = "bottom")
         whoAreYouPlayingWithTitle.config(text="Sorry, try a shorter name.")
         return
-
     for players in playerList:
         if players == playerName and totalPlayers < 4:
             menuClickSound.play()
             whoAreYouPlayingWithTitle.config(text="Sorry that name is already taken.")
             return
-
     if (totalPlayers < 4):
         if totalPlayers == 0:
             dingSound1.play()
@@ -163,7 +158,6 @@ def playGame():
 def displayRandomUser():
     global playerList
     global firstPick
-
     listIndex = (len(playerList))
     #Get random player
     for x in range(1):
@@ -205,10 +199,8 @@ def firstRecording():
     write(inputFileName, fs,record_voice)
     #Set TFM to the sox.transformer()
     tfm = sox.Transformer()
-
     #Call the reverse function within Sox.
     tfm.reverse()
-
     #Take in input file, export to home directory.
     tfm.build(inputFileName, outputFileName)
     #Change text of button after it is pressed
@@ -370,7 +362,6 @@ def user4Recording():
     tfm = sox.Transformer()
     #Call the reverse function within Sox.
     tfm.reverse()
-
     #Take in input file, export to home directory.
     tfm.build("user4Recording.wav", "user4Reverse.wav")
     bingSound2.play()
@@ -390,10 +381,8 @@ def startRecording1():
     write(inputFileName, fs,record_voice)
     #Set TFM to the sox.transformer()
     tfm = sox.Transformer()
-
     #Call the reverse function within Sox.
     tfm.reverse()
-
     #Take in input file, export to home directory.
     tfm.build(inputFileName, outputFileName)
     frame3Title5 = tk.Label(frame3, text = '', bg = background)
@@ -405,8 +394,7 @@ def showFirstRecordingPlayButton():
     global firstRecordingIterator
     global secondRecordingIterator
     global playReversedWordText
-    #frame3BlackFiller = tk.Label(frame3, text = '', bg = background, font=(font, 20))
-    #frame3BlackFiller.pack(fill = 'x', side = "top")
+    global roundNumber
     playReversedWordText = "Play " + firstPick + "'s word in reverse:"
     frame3BlackFiller = tk.Label(frame3, text = '', bg = background, font=(font, 50))
     frame3BlackFiller.pack(fill = 'x', side = "top")
@@ -416,7 +404,14 @@ def showFirstRecordingPlayButton():
         secondRecordingIterator+=1
         frame3_title2.pack()
         playButtonF3.pack()
-
+    elif roundNumber == 2 and secondRecordingIterator == 2:
+        secondRecordingIterator+=1
+        frame3_title2.pack()
+        playButtonF3.pack()
+    elif roundNumber == 3 and secondRecordingIterator == 3:
+        secondRecordingIterator+=1
+        frame3_title2.pack()
+        playButtonF3.pack()
 #Show play it backwards button once recording has finished.
 def showPlayButton():
     frame3Title5 = tk.Label(frame3, text = '', bg = background)
@@ -452,7 +447,7 @@ def all_children():
         widget.pack_forget()
     for widget in frame4.winfo_children():
         widget.pack_forget()
-    #Frame 3 code repack
+    #Frame 3 code elements repack
     frame3_title1 = tk.Label(frame3, text = '', bg = background2)
     frame3_title1.pack(fill = 'x')
     frame3_title2 = tk.Label(frame3, text = "Who's up next?", bg = background2, fg = white, font=(font, 30, 'italic'))
@@ -463,7 +458,7 @@ def all_children():
     frame3_title4.pack(fill = 'x')
     startRecordingButtonF3.config(image = RecordButton, text="Record", bg = background)
     playButtonF3 = Button(frame3, text = "Play It Backwards", font=(font, 20), command=playRecording1, bg = yellow)
-    #Frame 4 code repack
+    #Frame 4 code elements repack
     frame4_title1 = tk.Label(frame4, text = '', bg = background2)
     frame4_title1.pack(fill = 'x')
     if roundNumber == 2:
@@ -495,7 +490,7 @@ def votes():
     global player4Name
     menuClickSound.play()
     mixer.music.load('sounds/intensemusic.wav')
-    mixer.music.set_volume(.5)
+    mixer.music.set_volume(0.2)
     mixer.music.play()
     playerCountIterator = 0;
     roundNumber += 1
@@ -624,7 +619,7 @@ def endGame():
     global winnerScore
     pygame.mixer.music.fadeout(0)
     mixer.music.load('sounds/winningmusic.wav')
-    mixer.music.set_volume(.5)
+    mixer.music.set_volume(0.2)
     mixer.music.play()
     menuClickSound.play()
     if (len(playerList)) > 1:
@@ -654,7 +649,6 @@ def endGame():
         frame3_title4 = tk.Label(frame6, text = '', bg = background, font=(font, 20))
         frame3_title4.pack(side = "bottom", fill = 'x')
         frame6_btn2.pack(side="bottom")
-
     else:
         frame6_title1.pack(fill = 'x')
         frame6_title2.config(text = "Thanks for playing!")
@@ -685,7 +679,7 @@ def whoWon():
     winnerScore = players[winner]
 
 #Navigate to the home user directory for cody.
-os.chdir('/home/cody/playitbackwards')
+os.chdir('/home/cody/sayitbackwards')
 
 inputFileName = 'user1.wav'
 #Grab the fourth character of the input file name to grab what user it's from.
@@ -844,7 +838,7 @@ chimeSound = pygame.mixer.Sound('sounds/chime.wav')
 bingSound1 = pygame.mixer.Sound('sounds/bing.wav')
 bingSound2 = pygame.mixer.Sound('sounds/bing2.wav')
 mixer.music.load('sounds/background.wav')
-mixer.music.set_volume(.5)
+mixer.music.set_volume(.2)
 mixer.music.play()
 
 window.mainloop()
